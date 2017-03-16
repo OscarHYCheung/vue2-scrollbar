@@ -89,8 +89,6 @@
     methods: {
 
       scroll(e){
-        e.preventDefault()
-
         // Make sure the content height is not changed
         this.calculateSize(() => {
           // Set the wheel step
@@ -113,10 +111,10 @@
           let canScrollX = this.scrollAreaWidth > this.scrollWrapperWidth
 
           // Vertical Scrolling
-          if(canScrollY && !shifted) this.normalizeVertical(nextY)
+          if(canScrollY && !shifted && this.normalizeVertical(nextY)) e.preventDefault()
 
           // Horizontal Scrolling
-          if(shifted && canScrollX) this.normalizeHorizontal(nextX)
+          if(shifted && canScrollX && this.normalizeHorizontal(nextX)) e.preventDefault()
         })
 
       },
@@ -185,8 +183,13 @@
         else if(next < 0) next = 0
 
         // Update the Vertical Value
+
+        if (this.top === next) return false
+
         this.top = next,
         this.vMovement = next / elementSize.scrollAreaHeight * 100
+
+        return true
       },
 
       normalizeHorizontal(next){
@@ -202,8 +205,13 @@
         else if(next < 0) next = 0
 
         // Update the Horizontal Value
+
+        if (this.left === next) return false
+
         this.left = next,
         this.hMovement = next / elementSize.scrollAreaWidth * 100
+
+        return true
       },
 
       handleChangePosition(movement, orientation){
