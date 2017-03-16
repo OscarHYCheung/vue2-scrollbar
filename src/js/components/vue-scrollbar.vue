@@ -121,9 +121,6 @@
 
       // DRAG EVENT JUST FOR TOUCH DEVICE~
       startDrag(e){
-        e.preventDefault()
-        e.stopPropagation()
-
         e = e.changedTouches ? e.changedTouches[0] : e
 
         // Make sure the content height is not changed
@@ -137,24 +134,22 @@
 
       onDrag(e){
         if(this.dragging){
-
-          e.preventDefault()
-          e = e.changedTouches ? e.changedTouches[0] : e
+          const tagetEvent = e.changedTouches ? e.changedTouches[0] : e
 
           // Invers the Movement
-          let yMovement = this.start.y - e.clientY
-          let xMovement = this.start.x - e.clientX
+          let yMovement = this.start.y - tagetEvent.clientY
+          let xMovement = this.start.x - tagetEvent.clientX
 
-          // Update the last e.client
-          this.start = { y: e.clientY, x: e.clientX }
+          // Update the last tagetEvent.client
+          this.start = { y: tagetEvent.clientY, x: tagetEvent.clientX }
 
           // The next Vertical Value will be
           let nextY = this.top + yMovement
           let nextX = this.left + xMovement
 
-          this.normalizeVertical(nextY)
-          this.normalizeHorizontal(nextX)
-
+          if (this.normalizeVertical(nextY) || this.normalizeHorizontal(nextX)) {
+            e.preventDefault()
+          }
         }
       },
 
