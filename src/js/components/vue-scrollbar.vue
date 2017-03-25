@@ -147,7 +147,9 @@
           let nextY = this.top + yMovement
           let nextX = this.left + xMovement
 
-          if (this.normalizeVertical(nextY) || this.normalizeHorizontal(nextX)) {
+          const willMoveVertically = this.normalizeVertical(nextY)
+          const willMoveHorizontally = this.normalizeHorizontal(nextX)
+          if (willMoveVertically || willMoveHorizontally) {
             e.preventDefault()
           }
         }
@@ -167,6 +169,7 @@
 
       normalizeVertical(next){
         let elementSize = this.getSize()
+        if (elementSize.scrollAreaHeight <= elementSize.scrollWrapperHeight) return false
 
         // Vertical Scrolling
         let lowerEnd = elementSize.scrollAreaHeight - elementSize.scrollWrapperHeight
@@ -189,6 +192,7 @@
 
       normalizeHorizontal(next){
         let elementSize = this.getSize()
+        if (elementSize.scrollAreaWidth <= elementSize.scrollWrapperWidth) return false
 
         // Horizontal Scrolling
         let rightEnd = elementSize.scrollAreaWidth - this.scrollWrapperWidth
